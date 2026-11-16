@@ -9,14 +9,14 @@ A free, private, Quizlet-style vocabulary study app for school words. Hosted as 
 - Bulk paste or import **.txt / .csv** vocabulary files, with preview and duplicate detection
 - Flashcards with **I remembered / Still learning** progress tracking
 - Multiple-choice practice (word → definition and definition → word)
-- Spelling practice and a 10-question mixed school-style test
+- Spelling practice, **sentence fill-in-the-blanks**, and a 10-question mixed school-style test
 - Per-word learning levels, review scheduling, test history, and progress dashboard
 - Automatic saving to the browser's **localStorage**
 - **Download JSON backup** and **Restore JSON backup**
 
 ## Deploy on GitHub Pages
 
-The repository includes a GitHub Actions workflow at [\`.github/workflows/deploy.yml\`](.github/workflows/deploy.yml).
+The repository includes a GitHub Actions workflow at [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
 1. Open this repository's **Settings → Pages**.
 2. Under **Build and deployment**, choose **GitHub Actions** as the source.
@@ -27,19 +27,19 @@ The website is plain HTML, CSS, and JavaScript. It does not require Node, npm, R
 
 ## Starter vocabulary
 
-The initial 12 sample words are in [\`data/vocabulary.json\`](data/vocabulary.json), based on a photographed school vocabulary notebook. The starter definitions and sentences are editable in the app.
+The initial 12 sample words are in [`data/vocabulary.json`](data/vocabulary.json), based on a photographed school vocabulary notebook. The starter definitions and sentences are editable in the app.
 
-To add a new photographed list later, send the photo to ChatGPT and request an **append to \`data/vocabulary.json\`**. When that file changes, the app merges newly added seed words into existing browser data upon page reload, without wiping progress. Locally edited or locally deleted starter words are respected on that device.
+To add a new photographed list later, send the photo to ChatGPT and request an **append to `data/vocabulary.json`**. When that file changes, the app merges newly added seed words into existing browser data upon page reload, without wiping progress. Locally edited or locally deleted starter words are respected on that device.
 
 ### Text import
 
 Choose **My word lists → Import words**, then paste or upload a file with one entry per line. Supported formats:
 
-\`\`\`text
+```text
 Dour | Adjective | Severe; gloomy | The garbage collector was dour.
 Eschew | To avoid or shun
 Conundrum | Noun | A difficult puzzle | We faced a conundrum.
-\`\`\`
+```
 
 Tab-separated fields and basic CSV files are also supported. In the two-column format, the part of speech is set to "Other". Preview the detected words before importing.
 
@@ -51,19 +51,23 @@ Each word tracks its total correct and incorrect answers, learning level (0–5)
 
 The app saves every word edit and every answer to this browser. It does **not** synchronize devices automatically. Use **My word lists → Backup / restore** to download one JSON containing words, learning history, and progress. Upload it to a **private** GitHub repository if desired, or move it between devices and restore it.
 
-**Privacy note:** \`data/vocabulary.json\` is public because this GitHub Pages repository is public. Keep private names, personal details, and learning progress out of that file. Your local progress and manually entered words are not automatically committed to GitHub.
+**Privacy note:** `data/vocabulary.json` is public because this GitHub Pages repository is public. Keep private names, personal details, and learning progress out of that file. Your local progress and manually entered words are not automatically committed to GitHub.
 
 ## Developer notes
 
-- Main app: [\`app.js\`](app.js)
-- Styling: [\`styles.css\`](styles.css)
-- Starter data: [\`data/vocabulary.json\`](data/vocabulary.json)
-- GitHub Pages deployment: [\`.github/workflows/deploy.yml\`](.github/workflows/deploy.yml)
+- Main app: [`app.js`](app.js)
+- Styling: [`styles.css`](styles.css)
+- Starter data: [`data/vocabulary.json`](data/vocabulary.json)
+- GitHub Pages deployment: [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
 
-There are no external JavaScript dependencies. Fonts load from Google Fonts if available and fall back to system fonts. To work on the site locally, serve the folder with a small static web server, for example \`python3 -m http.server 8000\`. Opening \`index.html\` directly as \`file://\` may prevent the JSON fetch from working.
+There are no external JavaScript dependencies. Fonts load from Google Fonts if available and fall back to system fonts. To work on the site locally, serve the folder with a small static web server, for example `python3 -m http.server 8000`. Opening `index.html` directly as `file://` may prevent the JSON fetch from working.
 
 ## Limitations
 
 - Browser data can be lost if website storage is cleared or the browser evicts it. Download periodic backups.
 - Quiz questions are generated from the supplied word definitions; no AI service or paid API is used.
 - A complete GitHub commit from within the learner's browser is not supported, intentionally: no GitHub token or private API credential is stored in public JavaScript.
+
+## Validation
+
+Every GitHub Pages deployment first runs the dependency-free smoke test: `node tests/smoke.cjs`.
