@@ -21,13 +21,16 @@ for (const file of ['index.html','styles.css','favicon.svg','.github/workflows/d
 }
 
 const withExports = source.replace(/\s*initialize\(\);\s*\}\)\(\);\s*$/,
-  '  return {sanitizeDb,mergeSeedWords,counts,makeQuestion,parseText,startQuiz,answerQuiz,advanceQuiz,startFlash,rateFlash,getDb:()=>db,getQuiz:()=>quiz,getFlash:()=>flash,setDb:(x)=>{db=x},setSeed:(x)=>{seedWords=x}};\n})();');
+  '  return {sanitizeDb,mergeSeedWords,counts,makeQuestion,parseText,startQuiz,answerQuiz,advanceQuiz,startFlash,rateFlash,openWordForm,createDeck,allDecks,getDb:()=>db,getQuiz:()=>quiz,getFlash:()=>flash,setDb:(x)=>{db=x},setSeed:(x)=>{seedWords=x}};\n})();');
 assert.notEqual(withExports, source, 'Could not isolate test functions');
 const elements = {};
 for (const id of ['app','deckFilter','breadcrumb','toast']) {
   elements[id] = {value:'all',innerHTML:'',textContent:'',classList:{add(){},remove(){}}};
 }
-const document = {getElementById:(id)=>elements[id] || null,querySelectorAll:()=>[],addEventListener(){}};
+const modalElement = {remove(){},querySelector(){return {focus(){}}}};
+const document = {getElementById:(id)=>elements[id] || (id==='modalBackdrop'?modalElement:null),
+  querySelectorAll:()=>[],addEventListener(){},
+  body:{insertAdjacentHTML(_position,html){modalElement.html=html;}}};
 const window = {location:{hash:'#home'},addEventListener(){},scrollTo(){}};
 const saved = {};
 const localStorage = {setItem:(key,val)=>{saved[key]=val},getItem:(key)=>saved[key] || null};
@@ -38,6 +41,13 @@ app.setSeed(seed);
 app.mergeSeedWords();
 assert.equal(app.getDb().words.length,12);
 assert.equal(app.counts(app.getDb().words).new,12);
+// Regression: an empty Add Word form must open without dereferencing null.
+app.openWordForm();
+assert.ok(modalElement.html.includes('id="wordForm"'));
+app.createDeck({elements:{deck:{value:'Unit 2'}}});
+assert.ok(app.allDecks().includes('Unit 2'));
+assert.equal(app.getDb().words.filter(w => w.deck==='Unit 2').length,0);
+assert.ok(app.sanitizeDb(JSON.parse(JSON.stringify(app.getDb()))).decks.includes('Unit 2'));
 
 const parsed = app.parseText('Word | Definition\nDour | Severe; gloomy\nNewWord | Noun | A test meaning | A test sentence', 'Notebook Sample');
 assert.equal(parsed.out.length,2);
