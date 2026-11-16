@@ -94,5 +94,165 @@
     "definition": "To discourage or keep someone from doing something",
     "sentence": "Most homes have security cameras to deter thieves.",
     "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-exodus",
+    "word": "Exodus",
+    "partOfSpeech": "Noun",
+    "definition": "A mass departure",
+    "sentence": "The forest fire created an exodus of animals.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-forbearance",
+    "word": "Forbearance",
+    "partOfSpeech": "Noun",
+    "definition": "Patience",
+    "sentence": "Sitting in the highway required great forbearance.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-forebode",
+    "word": "Forebode",
+    "partOfSpeech": "Verb",
+    "definition": "To predict or to foretell",
+    "sentence": "In ancient Greece, it was believed that a sage could forebode the future.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-fray",
+    "word": "Fray",
+    "partOfSpeech": "Noun",
+    "definition": "A fight or scuffle; a brawl",
+    "sentence": "The stray dogs started a fray.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-fetter",
+    "word": "Fetter",
+    "partOfSpeech": "Verb/Noun",
+    "definition": "To restrain; to hamper; a shackle",
+    "sentence": "The dog was fettered to prevent harm to other people.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-brazen",
+    "word": "Brazen",
+    "partOfSpeech": "Adjective",
+    "definition": "Bold; shameless",
+    "sentence": "The senator's brazen speech shocked the audience.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-brouhaha",
+    "word": "Brouhaha",
+    "partOfSpeech": "Noun",
+    "definition": "An uproar; a hubbub",
+    "sentence": "My mother warned me that if the sleepover turned into a brouhaha, she would send everyone home.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-camaraderie",
+    "word": "Camaraderie",
+    "partOfSpeech": "Noun",
+    "definition": "Friendship",
+    "sentence": "Because we are both WSU Cougar fans, we had a camaraderie.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-capitulate",
+    "word": "Capitulate",
+    "partOfSpeech": "Verb",
+    "definition": "To surrender under certain conditions; to give in",
+    "sentence": "The suspect finally capitulated to the police after there was no escape.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-cavalier",
+    "word": "Cavalier",
+    "partOfSpeech": "Adjective",
+    "definition": "Casual, carefree, and nonchalant; showing arrogant disregard",
+    "sentence": "Colonel Mack was disliked because of his cavalier attitude toward the troops.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-accrue",
+    "word": "Accrue",
+    "partOfSpeech": "Verb",
+    "definition": "To accumulate over time",
+    "sentence": "By the time he was 18, he had accrued a knowledge of computers.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-ambivalence",
+    "word": "Ambivalence",
+    "partOfSpeech": "Noun",
+    "definition": "Indecision; experiencing contradictory feelings",
+    "sentence": "Farmer Brown was ambivalent about corn and tomatoes.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-appease",
+    "word": "Appease",
+    "partOfSpeech": "Verb",
+    "definition": "To soothe; to pacify or relieve by giving in",
+    "sentence": "To appease his mother, Zach always walked the dog.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-asinine",
+    "word": "Asinine",
+    "partOfSpeech": "Adjective",
+    "definition": "Silly",
+    "sentence": "The children howled with laughter at the asinine joke.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-baleful",
+    "word": "Baleful",
+    "partOfSpeech": "Adjective",
+    "definition": "Threatening; harmful; ominous",
+    "sentence": "The sky was baleful, filled with clouds.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-brink",
+    "word": "Brink",
+    "partOfSpeech": "Noun",
+    "definition": "Edge",
+    "sentence": "The cat was on the brink of the counter.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-abashed",
+    "word": "Abashed",
+    "partOfSpeech": "Adjective",
+    "definition": "Ashamed or embarrassed",
+    "sentence": "Tony was abashed when he had no cash.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-apex",
+    "word": "Apex",
+    "partOfSpeech": "Noun",
+    "definition": "Highest point; peak",
+    "sentence": "Christina marked the apex before she finished the graphing problem.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-abate",
+    "word": "Abate",
+    "partOfSpeech": "Verb",
+    "definition": "To reduce; to become less intense",
+    "sentence": "Martha's defeat in the game did not abate her love for tennis.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-animosity",
+    "word": "Animosity",
+    "partOfSpeech": "Noun",
+    "definition": "A feeling of ill will; bitter hostility",
+    "sentence": "Displaying animosity for his neighbor, Roger built a fence between their houses.",
+    "deck": "Notebook Sample"
   }
 ]
