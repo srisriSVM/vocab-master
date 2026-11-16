@@ -263,7 +263,20 @@
     flash.revealed = false;
     render();
   }
+  function escapeRegex(text) {
+    const special='.+*?^$(){}|[]\\';
+    return String(text).split('').map((ch) => special.includes(ch) ? '\\'+ch : ch).join('');
+  }
   function makeQuestion(word,kind,pool) {
+    if (kind === 'sentence') {
+      const sentence=String(word.sentence || '');
+      const pattern=new RegExp('\\b'+escapeRegex(word.word)+'[a-z]*\\b','i');
+      const match=sentence.match(pattern);
+      if (match) {
+        return {word,kind,choices:[],clozeText:sentence.slice(0,match.index)+'_______'+sentence.slice(match.index+match[0].length),clozeAnswer:match[0]};
+      }
+      kind='spelling';
+    }
     if (kind === 'spelling') return {word,kind,choices:[]};
     let distractors = shuffle(pool.filter((w) => w.id !== word.id && (kind === 'meaning' ? normalize(w.definition) !== normalize(word.definition) : normalize(w.word) !== normalize(word.word))));
     const used = new Set([normalize(kind === 'meaning' ? word.definition : word.word)]);
@@ -280,7 +293,7 @@
     const pool = scopedWords();
     if (!pool.length) {navigate('words');return;}
     let cards = shuffle(pool).slice(0, Math.min(mode === 'test'?10:10,pool.length));
-    quiz = {mode,deck:selectedDeck,questions:cards.map((w,i) => makeQuestion(w, mode === 'test' ? ['meaning','word','spelling'][i%3] : kind, pool)),
+    quiz = {mode,deck:selectedDeck,questions:cards.map((w,i) => makeQuestion(w, mode === 'test' ? ['meaning','word','spelling','sentence'][i%4] : kind, pool)),
       index:0,score:0,answered:false,picked:null,wasCorrect:false,guess:'',answers:[],finished:false};
     render();
   }
@@ -288,21 +301,21 @@
     if (!scopedWords().length) return section(mode==='test'?'Test mode':'Quick practice','Your word journey starts here.') + emptyStudy();
     if (!quiz || quiz.mode !== mode || quiz.deck !== selectedDeck) {
       const heading = mode === 'test' ? 'Ready for a little challenge?' : 'How do you want to practice?';
-      const intro = mode === 'test' ? 'A mix of meanings, word recognition, and spelling. Answers are revealed at the end.' : 'Choose your favorite way to learn. Mistakes help us pick what to review next.';
+      const intro = mode === 'test' ? 'A mix of meanings, spelling, and fill-in-the-blank sentences. Answers are revealed at the end.' : 'Choose your favorite way to learn. Mistakes help us pick what to review next.';
       return section(mode === 'test' ? 'Test mode' : 'Quick practice',intro)+
         '<div class="panel study-shell" style="text-align:center;padding:42px 25px"><div style="font-size:57px">'+(mode==='test'?'📝':'🧠')+'</div>'+
         '<h2 class="section-title" style="margin:13px 0 7px">'+heading+'</h2><p class="subtitle">Up to 10 questions from your selected list.</p>'+
         (mode === 'test' ? '<button class="button primary" data-action="start-quiz" data-mode="test" data-kind="mixed">Start my test →</button>' :
         '<div class="session-actions"><button class="button primary" data-action="start-quiz" data-mode="practice" data-kind="meaning">Word → Meaning</button>'+
         '<button class="button soft" data-action="start-quiz" data-mode="practice" data-kind="word">Meaning → Word</button>'+
-        '<button class="button outline" data-action="start-quiz" data-mode="practice" data-kind="spelling">Spelling practice</button></div>')+
+        '<button class="button outline" data-action="start-quiz" data-mode="practice" data-kind="spelling">Spelling practice</button>'+'<button class="button outline" data-action="start-quiz" data-mode="practice" data-kind="sentence">Sentence blanks</button></div>')+
         '</div>';
     }
     if (quiz.finished) return renderQuizResult();
     const q = quiz.questions[quiz.index], no = quiz.index+1, total = quiz.questions.length;
     let body;
-    if (q.kind === 'spelling') {
-      body = '<form id="spellForm"><label class="helper" for="spellAnswer">Type the vocabulary word that matches this definition:</label>'+
+    if (q.kind === 'spelling' || q.kind === 'sentence') {
+      body = '<form id="spellForm"><label class="helper" for="spellAnswer">'+(q.kind==='sentence'?'Type the missing word (use the right form):':'Type the vocabulary word that matches this definition:')+'</label>'+
       '<input type="text" id="spellAnswer" class="spell-input" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type the word…" '+(quiz.answered?'disabled':'')+' value="'+h(quiz.guess)+'" />'+
       (!quiz.answered?'<button type="submit" class="button primary">Check answer</button>':'')+'</form>';
     } else {
@@ -318,7 +331,7 @@
     if (quiz.answered) {
       if (mode === 'practice') {
         feedback = '<div class="quiz-feedback '+(quiz.wasCorrect?'good':'bad')+'"><strong>'+(quiz.wasCorrect?'That’s right! ✨':'Good try — keep learning!')+'</strong><br>'+
-          'The answer is <strong>'+h(q.word.word)+'</strong>: '+h(q.word.definition)+
+          'The answer is <strong>'+h(q.kind==='sentence'?q.clozeAnswer:q.word.word)+'</strong>: '+h(q.word.definition)+
           (q.word.sentence ? '<br><em>'+h(q.word.sentence)+'</em>':'')+'</div>';
       } else {
         feedback = '<div class="quiz-feedback">Answer saved. Keep going — you’ll see your score at the end.</div>';
@@ -328,18 +341,18 @@
     return '<div class="study-shell">'+section(mode==='test'?'Test mode':'Quick practice',mode==='test'?'Do your best — no peeking!':'Every answer helps you learn.')+
       '<div class="session-meta"><span>Question '+no+' of '+total+'</span><span>'+(mode==='test'?'Your mini vocabulary test':quiz.score+' correct so far')+'</span></div>'+
       '<div class="progress-line" style="margin-bottom:18px"><div style="width:'+pct(quiz.index,total)+'%"></div></div>'+
-      '<div class="question-box"><div class="question-kicker">'+(q.kind==='meaning'?'CHOOSE THE DEFINITION':q.kind==='word'?'FIND THE WORD':'SPELL THE WORD')+'</div>'+
-      '<h2>'+(q.kind==='meaning'?'What does “'+h(q.word.word)+'” mean?' : q.kind==='word'?'Which word means “'+h(q.word.definition)+'”?' : 'Which word means “'+h(q.word.definition)+'”?')+'</h2>'+
+      '<div class="question-box"><div class="question-kicker">'+(q.kind==='meaning'?'CHOOSE THE DEFINITION':q.kind==='word'?'FIND THE WORD':q.kind==='sentence'?'COMPLETE THE SENTENCE':'SPELL THE WORD')+'</div>'+
+      '<h2>'+(q.kind==='meaning'?'What does “'+h(q.word.word)+'” mean?' : q.kind==='word'?'Which word means “'+h(q.word.definition)+'”?' : q.kind==='sentence'?h(q.clozeText):'Which word means “'+h(q.word.definition)+'”?')+'</h2>'+
       body+feedback+'</div><p style="text-align:center"><button class="text-link" data-action="stop-quiz">← Exit '+(mode==='test'?'test':'practice')+'</button></p></div>';
   }
   function answerQuiz(chosen) {
     if (!quiz || quiz.finished || quiz.answered) return;
     const q = quiz.questions[quiz.index];
-    const correct = q.kind==='spelling' ? normalize(chosen) === normalize(q.word.word) : String(chosen) === String(q.word.id);
+    const correct = q.kind==='spelling' ? normalize(chosen) === normalize(q.word.word) : q.kind==='sentence' ? normalize(chosen) === normalize(q.clozeAnswer) : String(chosen) === String(q.word.id);
     quiz.answered = true;
     quiz.wasCorrect = correct;
-    quiz.picked = q.kind==='spelling' ? null : chosen;
-    quiz.guess = q.kind==='spelling' ? String(chosen).trim() : '';
+    quiz.picked = q.kind==='spelling' || q.kind==='sentence' ? null : chosen;
+    quiz.guess = q.kind==='spelling' || q.kind==='sentence' ? String(chosen).trim() : '';
     if (correct) quiz.score++;
     quiz.answers.push({word:q.word.word,definition:q.word.definition,correct,answer:quiz.guess || chosen});
     recordAnswer(q.word,correct);
