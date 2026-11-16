@@ -21,7 +21,7 @@ for (const file of ['index.html','styles.css','favicon.svg','.github/workflows/d
 }
 
 const withExports = source.replace(/\s*initialize\(\);\s*\}\)\(\);\s*$/,
-  '  return {sanitizeDb,mergeSeedWords,counts,makeQuestion,parseText,startQuiz,answerQuiz,advanceQuiz,startFlash,rateFlash,openWordForm,createDeck,allDecks,getDb:()=>db,getQuiz:()=>quiz,getFlash:()=>flash,setDb:(x)=>{db=x},setSeed:(x)=>{seedWords=x}};\n})();');
+  '  return {sanitizeDb,mergeSeedWords,counts,makeQuestion,parseText,startQuiz,answerQuiz,advanceQuiz,startFlash,rateFlash,openWordForm,createDeck,allDecks,matchingSuggestions,renderQuizPage,onSubmit,onInput,updateSuggestions,chooseSuggestion,makeQuestion,getDb:()=>db,getQuiz:()=>quiz,getFlash:()=>flash,setDb:(x)=>{db=x},setSeed:(x)=>{seedWords=x}};\n})();');
 assert.notEqual(withExports, source, 'Could not isolate test functions');
 const elements = {};
 for (const id of ['app','deckFilter','breadcrumb','toast']) {
@@ -81,6 +81,65 @@ app.getFlash().revealed=true;
 app.rateFlash(true);
 assert.equal(app.getFlash().index,1);
 assert.equal(app.getFlash().correct,1);
+
+// Test Mode: support mixed, context blanks only, and multiple choice only.
+assert.ok(seed.every((w)=>Array.isArray(w.contextSentences) && w.contextSentences.length>=2), 'All school words should have fresh context examples');
+app.startQuiz('test','sentence',{autocomplete:true});
+assert.equal(app.getQuiz().questions.length,10);
+assert.equal(app.getQuiz().autocomplete,true);
+assert.equal(app.getQuiz().testKind,'sentence');
+assert.ok(app.getQuiz().questions.every((q)=>q.kind==='sentence'));
+for (const q of app.getQuiz().questions) {
+  assert.ok(q.clozeText.includes('_______'));
+  assert.ok(q.clozeAnswer);
+  assert.ok(!q.clozeText.includes(q.clozeAnswer));
+  assert.ok(q.word.contextSentences.some((text)=>text.replace(/\\b\\w+\\b/g,'').length>=0)); // source present
+}
+app.startQuiz('test','multiple',{autocomplete:false});
+assert.equal(app.getQuiz().autocomplete,false);
+assert.ok(app.getQuiz().questions.every((q)=>q.kind==='meaning'||q.kind==='word'));
+app.startQuiz('test','mixed',{autocomplete:false});
+assert.equal(app.getQuiz().testKind,'mixed');
+assert.ok(app.getQuiz().questions.some((q)=>q.kind==='sentence'));
+assert.ok(app.getQuiz().questions.some((q)=>q.kind==='spelling'));
+
+// The learner can request the easier autocomplete only after at least 2 letters.
+assert.deepEqual(app.matchingSuggestions('a'),[]);
+const ab=app.matchingSuggestions('ab');
+assert.ok(ab.length>0 && ab.length<=5);
+assert.ok(ab.every((value)=>value.toLowerCase().startsWith('ab')));
+assert.ok(app.matchingSuggestions('es').includes('Eschew'));
+assert.ok(!app.matchingSuggestions('zz').length);
+const input={id:'spellAnswer',value:'ab',attributes:{},setAttribute(name,value){this.attributes[name]=value},removeAttribute(name){delete this.attributes[name]},focus(){}};
+const list={hidden:true,innerHTML:''};
+elements.spellAnswer=input;
+elements.answerSuggestions=list;
+app.startQuiz('test','sentence',{autocomplete:true});
+app.updateSuggestions('ab');
+assert.equal(list.hidden,false);
+assert.ok(list.innerHTML.includes('Abashed'));
+app.chooseSuggestion({dataset:{value:'Abashed'}});
+assert.equal(input.value,'Abashed');
+assert.equal(list.hidden,true);
+app.startQuiz('test','sentence',{autocomplete:false});
+app.updateSuggestions('ab');
+assert.equal(list.hidden,true);
+app.startQuiz('practice','spelling');
+assert.equal(app.getQuiz().autocomplete,true);
+
+// Fallback remains a fill-in-the-blank for custom lists without a usable sentence.
+const custom=app.makeQuestion({id:'custom',word:'Ambivalence',definition:'Mixed feelings',sentence:'He was ambivalent about the decision.',contextSentences:[]},'sentence',seed);
+assert.equal(custom.kind,'sentence');
+assert.equal(custom.clozeAnswer,'Ambivalence');
+assert.ok(custom.clozeText.includes('_______'));
+
+app.startQuiz('test','multiple',{autocomplete:false});
+assert.ok(app.renderQuizPage('test').includes('CHOOSE THE DEFINITION') || app.renderQuizPage('test').includes('FIND THE WORD'));
+// Check the user-facing test setup choices.
+app.startQuiz('test','mixed');
+app.getQuiz().finished=true;
+assert.ok(app.renderQuizPage('test').includes('Your results'));
+
 
 // Regression: an empty Add Word form must open without dereferencing null.
 app.openWordForm();
