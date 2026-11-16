@@ -14,7 +14,7 @@
   const normalize = (value) => String(value || '').trim().replace(/\s+/g,' ').toLocaleLowerCase();
   const keyFor = (word) => normalize(word.word) + '::' + normalize(word.deck);
   const randomId = () => 'word-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,9);
-  const newDb = () => ({version:1,words:[],progress:{},history:[],deletedSeedIds:[],editedSeedIds:[]});
+  const newDb = () => ({version:1,words:[],decks:[],progress:{},history:[],deletedSeedIds:[],editedSeedIds:[]});
   let db = newDb();
   let seedWords = [];
   let view = 'home';
@@ -46,6 +46,7 @@
       sentence:String(w.sentence || '').slice(0,1200),
       deck:String(w.deck || 'My Words').slice(0,120)
     }));
+    result.decks = [...new Set((Array.isArray(value.decks) ? value.decks : []).filter((d) => typeof d === 'string').map((d) => d.trim().slice(0,120)).filter(Boolean))];
     result.progress = value.progress && typeof value.progress === 'object' && !Array.isArray(value.progress) ? value.progress : {};
     result.history = Array.isArray(value.history) ? value.history.slice(0,150) : [];
     result.deletedSeedIds = Array.isArray(value.deletedSeedIds) ? value.deletedSeedIds.map(String) : [];
@@ -56,6 +57,7 @@
     const deleted = new Set(db.deletedSeedIds);
     const edited = new Set(db.editedSeedIds);
     for (const entry of seedWords) {
+      if (entry && entry.deck && !db.decks.includes(entry.deck)) db.decks.push(entry.deck);
       if (!entry || !entry.id || !entry.word || !entry.definition || deleted.has(entry.id)) continue;
       const index = db.words.findIndex((w) => w.id === entry.id);
       if (index >= 0) {
@@ -82,7 +84,7 @@
     toastTimeout = setTimeout(() => el.classList.remove('show'), 4200);
   }
   function allDecks() {
-    return [...new Set(db.words.map((w) => w.deck).filter(Boolean))].sort((a,b) => a.localeCompare(b));
+    return [...new Set([...(db.decks || []),...db.words.map((w) => w.deck)].filter(Boolean))].sort((a,b) => a.localeCompare(b));
   }
   function scopedWords() {
     return selectedDeck === 'all' ? db.words : db.words.filter((w) => w.deck === selectedDeck);
@@ -201,7 +203,7 @@
   }
   function renderWords() {
     return '<div class="section-top"><div><h1 class="hi">My word lists</h1><p class="subtitle">Everything you are learning, all in one place.</p></div>'+
-      '<div class="toolbar" style="margin:0"><button class="button outline" data-action="open-import">↑ Import words</button>'+
+      '<div class="toolbar" style="margin:0"><button class="button outline" data-action="open-create-deck">＋ Create word list</button><button class="button outline" data-action="open-import">↑ Import words</button>'+
       '<button class="button primary" data-action="open-add">＋ Add a word</button></div></div>'+
       deckChips()+'<div class="toolbar"><input id="wordSearch" class="search" type="search" placeholder="⌕  Search words or meanings…" value="'+h(searchText)+'" aria-label="Search words and definitions"/>'+
       '<button class="button outline" data-action="open-backup">☁ Backup / restore</button></div><div id="wordResults"></div>';
@@ -420,11 +422,28 @@
     const el = byId('modalBackdrop');
     if (el) el.remove();
   }
+  function openCreateDeck() {
+    modal('Create word list','Name a unit or level now and add its words whenever you are ready.',
+      '<form id="deckForm"><div class="field"><label for="newDeckName">Word list name</label>'+
+      '<input id="newDeckName" name="deck" required maxlength="120" placeholder="e.g., Unit 2 or Level 3"></div>'+
+      '<div class="modal-actions"><button type="button" class="button outline" data-action="close-modal">Cancel</button>'+
+      '<button type="submit" class="button primary">Create list</button></div></form>');
+  }
+  function createDeck(form) {
+    const name=form.elements.deck.value.trim();
+    if (!name) {toast('Enter a list name.');return;}
+    const match=allDecks().find((d)=>normalize(d)===normalize(name));
+    if (match) {selectedDeck=match;closeModal();render();toast('That word list already exists.');return;}
+    db.decks.push(name);
+    selectedDeck=name;
+    save();closeModal();render();
+    toast('Word list created! Add your first word.');
+  }
   function openWordForm(id) {
     const word = id ? db.words.find((w) => w.id===id) : null;
     const decks = allDecks();
     const deck = word?.deck || (selectedDeck==='all'?'My Words':selectedDeck);
-    const parts = POS.includes(word?.partOfSpeech) ? POS : [word.partOfSpeech,...POS];
+    const parts = word && !POS.includes(word.partOfSpeech) ? [word.partOfSpeech,...POS] : POS;
     modal(word?'Edit word':'Add a new word','Save a word, its meaning, and an example sentence.',
       '<form id="wordForm" data-id="'+h(word?.id || '')+'">'+
       '<div class="form-row"><div class="field"><label for="wordInput">Word *</label><input id="wordInput" name="word" required maxlength="160" value="'+h(word?.word||'')+'" placeholder="e.g., Resilient"></div>'+
@@ -440,6 +459,7 @@
       definition:form.elements.definition.value.trim(),sentence:form.elements.sentence.value.trim(),deck:form.elements.deck.value.trim()};
     if (!record.word || !record.definition || !record.deck) {toast('Please include the word, its meaning, and a word list.');return;}
     if (db.words.some((w) => w.id!==oldId && keyFor(w)===keyFor(record))) {toast('That word already exists in this list.');return;}
+    if (!db.decks.includes(record.deck)) db.decks.push(record.deck);
     if (oldId) {
       const index = db.words.findIndex((w) => w.id===oldId);
       if (index<0) return;
@@ -529,6 +549,7 @@
   function confirmImport() {
     if (!importPreview.length) return;
     const toAdd=importPreview.filter((x)=>!x.duplicate && !db.words.some((w)=>keyFor(w)===keyFor(x.record))).map((x)=>x.record);
+    if (!db.decks.includes(byId('importDeck').value.trim())) db.decks.push(byId('importDeck').value.trim());
     db.words.push(...toAdd);save();closeModal();render();
     toast(toAdd.length+' word'+(toAdd.length===1?'':'s')+' imported! ✨');
   }
@@ -582,6 +603,7 @@
     const action=target.dataset.action;
     if (!action) return;
     if (action==='open-add') openWordForm();
+    else if (action==='open-create-deck') openCreateDeck();
     else if (action==='edit-word') openWordForm(target.dataset.id);
     else if (action==='delete-word') deleteWord(target.dataset.id);
     else if (action==='open-import') openImport();
@@ -603,6 +625,7 @@
   }
   function onSubmit(event) {
     if (event.target.id==='wordForm') {event.preventDefault();saveWord(event.target);}
+    if (event.target.id==='deckForm') {event.preventDefault();createDeck(event.target);}
     if (event.target.id==='spellForm') {event.preventDefault();const input=byId('spellAnswer');if (input?.value.trim()) answerQuiz(input.value);}
   }
   async function onChange(event) {
