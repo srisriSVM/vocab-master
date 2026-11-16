@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f7f7fc" />
+  <meta name="description" content="Vocabulary Master: an easy, private place to learn school vocabulary with flashcards, quizzes, and progress tracking." />
+  <title>Vocabulary Master — Make words stick</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="#home" aria-label="Vocabulary Master home">
+        <div class="brand-icon">W<span>✦</span></div>
+        <div><strong>vocab<span>master</span></strong><small>make words stick</small></div>
+      </a>
+      <p class="nav-label">YOUR LEARNING SPACE</p>
+      <nav aria-label="Main navigation" id="navigation">
+        <button data-view="home" class="nav-item active"><span class="nav-icon">⌂</span> Dashboard</button>
+        <button data-view="words" class="nav-item"><span class="nav-icon">▤</span> My word lists</button>
+        <button data-view="flashcards" class="nav-item"><span class="nav-icon">▣</span> Flashcards</button>
+        <button data-view="practice" class="nav-item"><span class="nav-icon">✦</span> Quick practice</button>
+        <button data-view="test" class="nav-item"><span class="nav-icon">✎</span> Test mode</button>
+        <button data-view="progress" class="nav-item"><span class="nav-icon">▥</span> My progress</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="streak-card"><div class="streak-emoji">✨</div><div><strong>Little by little</strong><p>A few words a day adds up to something amazing.</p></div></div>
+        <p class="privacy-note">🔒 Saved privately in this browser</p>
+      </div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="mini-brand">W✦</span> vocabmaster</div>
+        <div class="topbar-left"><span class="eyebrow" id="breadcrumb">MY LEARNING SPACE</span></div>
+        <div class="topbar-actions"><label for="deckFilter" class="sr-only">Choose vocabulary list</label><select id="deckFilter" aria-label="Choose vocabulary list"><option value="all">All word lists</option></select><span class="avatar" aria-hidden="true">★</span></div>
+      </header>
+      <main id="app" class="content" aria-live="polite">
+        <div class="loading">Getting your words ready…</div>
+      </main>
+      <footer class="footer">Made for curious minds · Everything saves automatically on this device</footer>
+    </div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
