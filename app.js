@@ -24,6 +24,7 @@
   let quiz = null;
   let importPreview = [];
   let toastTimeout = null;
+  let suggestionIndex = -1;
 
   function loadStored() {
     try {
@@ -44,6 +45,7 @@
       partOfSpeech:String(w.partOfSpeech || 'Other').slice(0,64),
       definition:String(w.definition).slice(0,1000),
       sentence:String(w.sentence || '').slice(0,1200),
+      contextSentences:Array.isArray(w.contextSentences) ? w.contextSentences.filter((sentence)=>typeof sentence==='string' && sentence.trim()).slice(0,8).map((sentence)=>sentence.slice(0,1200)) : [],
       deck:String(w.deck || 'My Words').slice(0,120)
     }));
     result.decks = [...new Set((Array.isArray(value.decks) ? value.decks : []).filter((d) => typeof d === 'string').map((d) => d.trim().slice(0,120)).filter(Boolean))];
@@ -271,13 +273,17 @@
   }
   function makeQuestion(word,kind,pool) {
     if (kind === 'sentence') {
-      const sentence=String(word.sentence || '');
+      const fresh=Array.isArray(word.contextSentences) ? word.contextSentences.filter((s)=>typeof s==='string' && s.trim()) : [];
+      const sentences=shuffle(fresh.length ? fresh : (word.sentence ? [word.sentence] : []));
       const pattern=new RegExp('\\b'+escapeRegex(word.word)+'[a-z]*\\b','i');
-      const match=sentence.match(pattern);
-      if (match) {
-        return {word,kind,choices:[],clozeText:sentence.slice(0,match.index)+'_______'+sentence.slice(match.index+match[0].length),clozeAnswer:match[0]};
+      for (const sentence of sentences) {
+        const match=String(sentence).match(pattern);
+        if (match) {
+          return {word,kind,choices:[],clozeText:sentence.slice(0,match.index)+'_______'+sentence.slice(match.index+match[0].length),clozeAnswer:match[0]};
+        }
       }
-      kind='spelling';
+      // Even custom words without a suitable example must stay fill-in-the-blank questions.
+      return {word,kind,choices:[],clozeText:'A word meaning “'+word.definition+'” is _______.',clozeAnswer:word.word};
     }
     if (kind === 'spelling') return {word,kind,choices:[]};
     let distractors = shuffle(pool.filter((w) => w.id !== word.id && (kind === 'meaning' ? normalize(w.definition) !== normalize(word.definition) : normalize(w.word) !== normalize(word.word))));
@@ -291,23 +297,78 @@
     if (!distractors.length) return {word,kind:'spelling',choices:[]};
     return {word,kind,choices:shuffle([word,...distractors])};
   }
-  function startQuiz(mode,kind) {
+  function startQuiz(mode,kind,options={}) {
     const pool = scopedWords();
     if (!pool.length) {navigate('words');return;}
-    let cards = shuffle(pool).slice(0, Math.min(mode === 'test'?10:10,pool.length));
-    quiz = {mode,deck:selectedDeck,questions:cards.map((w,i) => makeQuestion(w, mode === 'test' ? ['meaning','word','spelling','sentence'][i%4] : kind, pool)),
+    const testKind = mode==='test' && ['mixed','sentence','multiple'].includes(kind) ? kind : 'mixed';
+    const cards = shuffle(pool).slice(0,Math.min(10,pool.length));
+    const questionKind=(index) => mode!=='test' ? kind :
+      testKind==='sentence' ? 'sentence' :
+      testKind==='multiple' ? ['meaning','word'][index%2] :
+      ['meaning','word','spelling','sentence'][index%4];
+    quiz = {mode,deck:selectedDeck,testKind,practiceKind:kind,autocomplete:options.autocomplete ?? mode==='practice',
+      questions:cards.map((w,i)=>makeQuestion(w,questionKind(i),pool)),
       index:0,score:0,answered:false,picked:null,wasCorrect:false,guess:'',answers:[],finished:false};
+    suggestionIndex=-1;
     render();
+  }
+  function matchingSuggestions(typed,pool=scopedWords()) {
+    const prefix=normalize(typed);
+    if (prefix.length<2) return [];
+    return [...new Set(pool.map((w)=>w.word.trim()).filter(Boolean))]
+      .filter((word)=>normalize(word).startsWith(prefix))
+      .sort((a,b)=>a.localeCompare(b)).slice(0,5);
+  }
+  function updateSuggestions(value) {
+    const list=byId('answerSuggestions'),input=byId('spellAnswer');
+    if (!list || !input) return;
+    const words=quiz && !quiz.answered && quiz.autocomplete ? matchingSuggestions(value) : [];
+    suggestionIndex=-1;
+    list.hidden=!words.length;
+    list.innerHTML=words.map((word,i)=>
+      '<button type="button" id="suggestion-'+i+'" role="option" aria-selected="false" class="suggestion-option" data-action="choose-suggestion" data-value="'+h(word)+'">'+h(word)+'</button>').join('');
+    input.setAttribute('aria-expanded',String(Boolean(words.length)));
+    input.removeAttribute('aria-activedescendant');
+  }
+  function chooseSuggestion(target) {
+    const input=byId('spellAnswer');
+    if (!input || !quiz || quiz.answered || !quiz.autocomplete) return;
+    input.value=target.dataset.value || target.textContent.trim();
+    updateSuggestions('');
+    input.focus();
+  }
+  function onSuggestionKeydown(event) {
+    if (event.target.id!=='spellAnswer') return;
+    const list=byId('answerSuggestions');
+    if (!list || list.hidden) return;
+    const items=Array.from(list.querySelectorAll('button[data-action="choose-suggestion"]'));
+    if (!items.length) return;
+    if (event.key==='Escape') {updateSuggestions('');event.preventDefault();return;}
+    if (event.key==='ArrowDown' || event.key==='ArrowUp') {
+      event.preventDefault();
+      suggestionIndex=(suggestionIndex+(event.key==='ArrowDown'?1:items.length-1)+items.length)%items.length;
+      items.forEach((item,i)=>{item.classList.toggle('selected',i===suggestionIndex);item.setAttribute('aria-selected',String(i===suggestionIndex));});
+      event.target.setAttribute('aria-activedescendant',items[suggestionIndex].id);
+    } else if (event.key==='Enter' && suggestionIndex>=0) {
+      event.preventDefault();
+      chooseSuggestion(items[suggestionIndex]);
+    }
   }
   function renderQuizPage(mode) {
     if (!scopedWords().length) return section(mode==='test'?'Test mode':'Quick practice','Your word journey starts here.') + emptyStudy();
     if (!quiz || quiz.mode !== mode || quiz.deck !== selectedDeck) {
       const heading = mode === 'test' ? 'Ready for a little challenge?' : 'How do you want to practice?';
-      const intro = mode === 'test' ? 'A mix of meanings, spelling, and fill-in-the-blank sentences. Answers are revealed at the end.' : 'Choose your favorite way to learn. Mistakes help us pick what to review next.';
+      const intro = mode === 'test' ? 'Choose how you want to be tested. Answers are revealed at the end.' : 'Choose your favorite way to learn. Mistakes help us pick what to review next.';
       return section(mode === 'test' ? 'Test mode' : 'Quick practice',intro)+
         '<div class="panel study-shell" style="text-align:center;padding:42px 25px"><div style="font-size:57px">'+(mode==='test'?'📝':'🧠')+'</div>'+
         '<h2 class="section-title" style="margin:13px 0 7px">'+heading+'</h2><p class="subtitle">Up to 10 questions from your selected list.</p>'+
-        (mode === 'test' ? '<button class="button primary" data-action="start-quiz" data-mode="test" data-kind="mixed">Start my test →</button>' :
+        (mode === 'test' ? '<form id="testSetupForm" class="test-setup" style="text-align:left">'+
+          '<fieldset class="test-choices"><legend>Choose question type</legend>'+
+          '<label class="test-choice"><input type="radio" name="testType" value="mixed" checked><span><strong>Mixed test</strong><small>Definitions, word choices, spelling, and sentences</small></span></label>'+
+          '<label class="test-choice"><input type="radio" name="testType" value="sentence"><span><strong>Fill in the blanks only</strong><small>Complete sentences with the missing vocabulary word</small></span></label>'+
+          '<label class="test-choice"><input type="radio" name="testType" value="multiple"><span><strong>Multiple choice only</strong><small>No typing required</small></span></label></fieldset>'+
+          '<label class="test-autocomplete"><input type="checkbox" id="testAutocomplete" checked><span><strong>Show word suggestions while typing</strong><small>After 2 letters, show up to 5 matches from this list. Turn off for a harder test.</small></span></label>'+
+          '<div class="session-actions"><button type="submit" class="button primary">Start my test →</button></div></form>' :
         '<div class="session-actions"><button class="button primary" data-action="start-quiz" data-mode="practice" data-kind="meaning">Word → Meaning</button>'+
         '<button class="button soft" data-action="start-quiz" data-mode="practice" data-kind="word">Meaning → Word</button>'+
         '<button class="button outline" data-action="start-quiz" data-mode="practice" data-kind="spelling">Spelling practice</button>'+'<button class="button outline" data-action="start-quiz" data-mode="practice" data-kind="sentence">Sentence blanks</button></div>')+
@@ -318,7 +379,9 @@
     let body;
     if (q.kind === 'spelling' || q.kind === 'sentence') {
       body = '<form id="spellForm"><label class="helper" for="spellAnswer">'+(q.kind==='sentence'?'Type the missing word (use the right form):':'Type the vocabulary word that matches this definition:')+'</label>'+
-      '<input type="text" id="spellAnswer" class="spell-input" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type the word…" '+(quiz.answered?'disabled':'')+' value="'+h(quiz.guess)+'" />'+
+      '<input type="text" id="spellAnswer" class="spell-input" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type the word…" '+(quiz.answered?'disabled':'')+' value="'+h(quiz.guess)+'" '+
+      'aria-autocomplete="'+(quiz.autocomplete?'list':'none')+'" aria-controls="answerSuggestions" aria-expanded="false" />'+
+      '<div id="answerSuggestions" class="autocomplete-list" role="listbox" aria-label="Word suggestions" hidden></div>'+
       (!quiz.answered?'<button type="submit" class="button primary">Check answer</button>':'')+'</form>';
     } else {
       body = '<div class="choice-grid">'+q.choices.map((candidate,i) => {
@@ -368,7 +431,8 @@
     quiz.guess = '';
     if (quiz.index >= quiz.questions.length) {
       quiz.finished = true;
-      db.history.unshift({date:new Date().toISOString(),mode:quiz.mode,deck:quiz.deck,score:quiz.score,total:quiz.questions.length});
+      db.history.unshift({date:new Date().toISOString(),mode:quiz.mode,testKind:quiz.mode==='test'?quiz.testKind:null,
+        autocomplete:quiz.autocomplete,deck:quiz.deck,score:quiz.score,total:quiz.questions.length});
       db.history = db.history.slice(0,150);
       save();
     }
@@ -456,7 +520,8 @@
   function saveWord(form) {
     const oldId = form.dataset.id;
     const record = {word:form.elements.word.value.trim(),partOfSpeech:form.elements.partOfSpeech.value,
-      definition:form.elements.definition.value.trim(),sentence:form.elements.sentence.value.trim(),deck:form.elements.deck.value.trim()};
+      definition:form.elements.definition.value.trim(),sentence:form.elements.sentence.value.trim(),deck:form.elements.deck.value.trim(),
+      contextSentences:oldId ? (db.words.find((w)=>w.id===oldId)?.contextSentences || []) : []};
     if (!record.word || !record.definition || !record.deck) {toast('Please include the word, its meaning, and a word list.');return;}
     if (db.words.some((w) => w.id!==oldId && keyFor(w)===keyFor(record))) {toast('That word already exists in this list.');return;}
     if (!db.decks.includes(record.deck)) db.decks.push(record.deck);
@@ -618,14 +683,19 @@
     else if (action==='flash-flip') {if (flash){flash.revealed=!flash.revealed;render();}}
     else if (action==='flash-rate') rateFlash(target.dataset.correct==='true');
     else if (action==='start-quiz') startQuiz(target.dataset.mode,target.dataset.kind);
+    else if (action==='choose-suggestion') chooseSuggestion(target);
     else if (action==='pick-answer') answerQuiz(target.dataset.id);
     else if (action==='quiz-next') advanceQuiz();
     else if (action==='stop-quiz') {quiz=null;render();}
-    else if (action==='restart-quiz') {const mode=quiz.mode;const kind=quiz.questions[0]?.kind || 'meaning';startQuiz(mode,kind);}
+    else if (action==='restart-quiz') {const mode=quiz.mode;startQuiz(mode,mode==='test'?quiz.testKind:quiz.practiceKind,{autocomplete:quiz.autocomplete});}
   }
   function onSubmit(event) {
     if (event.target.id==='wordForm') {event.preventDefault();saveWord(event.target);}
     if (event.target.id==='deckForm') {event.preventDefault();createDeck(event.target);}
+    if (event.target.id==='testSetupForm') {
+      event.preventDefault();
+      startQuiz('test',event.target.elements.testType.value,{autocomplete:Boolean(event.target.elements.testAutocomplete.checked)});
+    }
     if (event.target.id==='spellForm') {event.preventDefault();const input=byId('spellAnswer');if (input?.value.trim()) answerQuiz(input.value);}
   }
   async function onChange(event) {
@@ -641,6 +711,7 @@
     }
   }
   function onInput(event) {
+    if (event.target.id==='spellAnswer') updateSuggestions(event.target.value);
     if (event.target.id==='wordSearch') {searchText=event.target.value;drawWordsTable();}
     if (event.target.id==='importText' || event.target.id==='importDeck') {
       importPreview=[];
@@ -663,6 +734,7 @@
     document.addEventListener('submit',onSubmit);
     document.addEventListener('change',onChange);
     document.addEventListener('input',onInput);
+    document.addEventListener('keydown',onSuggestionKeydown);
     window.addEventListener('hashchange',() => {
       const next=location.hash.replace('#','');
       if (NAV_LABELS[next] && view!==next) {view=next;render();}
