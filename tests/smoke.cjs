@@ -41,13 +41,6 @@ app.setSeed(seed);
 app.mergeSeedWords();
 assert.equal(app.getDb().words.length,12);
 assert.equal(app.counts(app.getDb().words).new,12);
-// Regression: an empty Add Word form must open without dereferencing null.
-app.openWordForm();
-assert.ok(modalElement.html.includes('id="wordForm"'));
-app.createDeck({elements:{deck:{value:'Unit 2'}}});
-assert.ok(app.allDecks().includes('Unit 2'));
-assert.equal(app.getDb().words.filter(w => w.deck==='Unit 2').length,0);
-assert.ok(app.sanitizeDb(JSON.parse(JSON.stringify(app.getDb()))).decks.includes('Unit 2'));
 
 const parsed = app.parseText('Word | Definition\nDour | Severe; gloomy\nNewWord | Noun | A test meaning | A test sentence', 'Notebook Sample');
 assert.equal(parsed.out.length,2);
@@ -84,5 +77,14 @@ app.getFlash().revealed=true;
 app.rateFlash(true);
 assert.equal(app.getFlash().index,1);
 assert.equal(app.getFlash().correct,1);
+
+// Regression: an empty Add Word form must open without dereferencing null.
+app.openWordForm();
+assert.ok(modalElement.html.includes('id="wordForm"'));
+app.createDeck({elements:{deck:{value:'Unit 2'}}});
+assert.ok(app.allDecks().includes('Unit 2'));
+assert.equal(app.getDb().words.filter(w => w.deck==='Unit 2').length,0);
+assert.ok(app.sanitizeDb(JSON.parse(JSON.stringify(app.getDb()))).decks.includes('Unit 2'));
+
 
 console.log('✓ Starter data, import, sentences, quizzes, progress, and flashcards passed');
