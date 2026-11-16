@@ -5,7 +5,11 @@
     "partOfSpeech": "Adjective",
     "definition": "Severe; gloomy",
     "sentence": "The garbage collector was a dour man.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The coach gave a dour response after the disappointing loss.",
+      "Despite the celebration, his dour expression never changed."
+    ]
   },
   {
     "id": "notebook-dishevel",
@@ -13,7 +17,11 @@
     "partOfSpeech": "Verb",
     "definition": "To make untidy; to disarrange",
     "sentence": "Andrea's hair became disheveled by the strong breeze.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The strong wind threatened to dishevel the decorations.",
+      "Rushing through the crowded hallway could dishevel her carefully styled hair."
+    ]
   },
   {
     "id": "notebook-eloquent",
@@ -21,7 +29,11 @@
     "partOfSpeech": "Adjective",
     "definition": "Extremely expressive in speech, writing, or movement",
     "sentence": "Stan gave a moving, eloquent speech.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "Her eloquent explanation persuaded the class to support her idea.",
+      "An eloquent speaker can make a difficult topic easy to understand."
+    ]
   },
   {
     "id": "notebook-emphatic",
@@ -29,7 +41,11 @@
     "partOfSpeech": "Adjective",
     "definition": "Forcible; expressive",
     "sentence": "My mom emphatically told me to be home by midnight.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The principal gave an emphatic warning about cheating.",
+      "His emphatic refusal left no room for debate."
+    ]
   },
   {
     "id": "notebook-eschew",
@@ -37,7 +53,11 @@
     "partOfSpeech": "Verb",
     "definition": "To avoid or to shun",
     "sentence": "Bob was told to eschew going outside during the storm.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "Athletes sometimes eschew sugary drinks before competitions.",
+      "The team agreed to eschew shortcuts and check every calculation."
+    ]
   },
   {
     "id": "notebook-chastise",
@@ -45,7 +65,11 @@
     "partOfSpeech": "Verb",
     "definition": "To discipline; to criticize severely",
     "sentence": "My mother chastised us for playing ball in the house.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The referee had to chastise the players for arguing.",
+      "Parents may chastise a child for ignoring important rules."
+    ]
   },
   {
     "id": "notebook-copious",
@@ -53,7 +77,11 @@
     "partOfSpeech": "Adjective",
     "definition": "Abundant; plentiful (a lot)",
     "sentence": "Lizzie gave copious reasons why she should stay at home.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The scientist recorded copious notes during the experiment.",
+      "After the storm, copious amounts of rainwater filled the pond."
+    ]
   },
   {
     "id": "notebook-cascade",
@@ -61,7 +89,11 @@
     "partOfSpeech": "Noun/Verb",
     "definition": "A waterfall; to fall, pour, or rush like a waterfall",
     "sentence": "A cascade of confetti rained down upon celebrating the new year.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "A cascade of water poured over the rocks.",
+      "One tiny error can cause a cascade of problems in the program."
+    ]
   },
   {
     "id": "notebook-conundrum",
@@ -69,7 +101,11 @@
     "partOfSpeech": "Noun",
     "definition": "A dilemma; a difficult problem or puzzle",
     "sentence": "In most mystery novels, the conundrum is solved by the end.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "Choosing between two equally good schools posed a conundrum.",
+      "The missing clue presented a conundrum for the detective."
+    ]
   },
   {
     "id": "notebook-crux",
@@ -77,7 +113,11 @@
     "partOfSpeech": "Noun",
     "definition": "The main point; the heart of the matter",
     "sentence": "After Harry rambled on for hours, it was difficult to understand the crux of his speech.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The crux of the argument was whether the evidence was reliable.",
+      "Once we understood the crux of the problem, the solution became clear."
+    ]
   },
   {
     "id": "notebook-defunct",
@@ -85,7 +125,11 @@
     "partOfSpeech": "Adjective",
     "definition": "Dead or inactive; having ceased to exist",
     "sentence": "The jolly man tried to use a coupon at the defunct store.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The museum displayed a sign from a defunct railway company.",
+      "A defunct website may still appear in old search results."
+    ]
   },
   {
     "id": "notebook-deter",
@@ -93,7 +137,11 @@
     "partOfSpeech": "Verb",
     "definition": "To discourage or keep someone from doing something",
     "sentence": "Most homes have security cameras to deter thieves.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "Bright lights can deter animals from entering the garden.",
+      "The threat of a fine did not deter the driver from speeding."
+    ]
   },
   {
     "id": "notebook-exodus",
@@ -101,7 +149,11 @@
     "partOfSpeech": "Noun",
     "definition": "A mass departure",
     "sentence": "The forest fire created an exodus of animals.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "A sudden storm caused an exodus of hikers from the trail.",
+      "The long holiday led to an exodus of workers from the city."
+    ]
   },
   {
     "id": "notebook-forbearance",
@@ -109,7 +161,11 @@
     "partOfSpeech": "Noun",
     "definition": "Patience",
     "sentence": "Sitting in the highway required great forbearance.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "He showed remarkable forbearance when the younger children interrupted him.",
+      "The teacher thanked the class for its forbearance during the delay."
+    ]
   },
   {
     "id": "notebook-forebode",
@@ -117,7 +173,11 @@
     "partOfSpeech": "Verb",
     "definition": "To predict or to foretell",
     "sentence": "In ancient Greece, it was believed that a sage could forebode the future.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The ominous thunder seemed to forebode a dangerous storm.",
+      "Her worried expression appeared to forebode bad news."
+    ]
   },
   {
     "id": "notebook-fray",
@@ -125,7 +185,11 @@
     "partOfSpeech": "Noun",
     "definition": "A fight or scuffle; a brawl",
     "sentence": "The stray dogs started a fray.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "A heated argument escalated into a fray outside the stadium.",
+      "The guards rushed in to break up the fray."
+    ]
   },
   {
     "id": "notebook-fetter",
@@ -133,7 +197,11 @@
     "partOfSpeech": "Verb/Noun",
     "definition": "To restrain; to hamper; a shackle",
     "sentence": "The dog was fettered to prevent harm to other people.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "Fear can fetter someone who wants to try something new.",
+      "Strict rules can fetter creativity in the classroom."
+    ]
   },
   {
     "id": "notebook-brazen",
@@ -141,7 +209,11 @@
     "partOfSpeech": "Adjective",
     "definition": "Bold; shameless",
     "sentence": "The senator's brazen speech shocked the audience.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The thief made a brazen attempt to steal a bicycle in daylight.",
+      "His brazen lie surprised everyone at the meeting."
+    ]
   },
   {
     "id": "notebook-brouhaha",
@@ -149,7 +221,11 @@
     "partOfSpeech": "Noun",
     "definition": "An uproar; a hubbub",
     "sentence": "My mother warned me that if the sleepover turned into a brouhaha, she would send everyone home.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "A minor scheduling change caused a brouhaha among the parents.",
+      "The surprise announcement sparked a brouhaha in the crowded room."
+    ]
   },
   {
     "id": "notebook-camaraderie",
@@ -157,7 +233,11 @@
     "partOfSpeech": "Noun",
     "definition": "Friendship",
     "sentence": "Because we are both WSU Cougar fans, we had a camaraderie.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "Months of practice built camaraderie among the orchestra members.",
+      "The team's camaraderie helped them stay positive after losing."
+    ]
   },
   {
     "id": "notebook-capitulate",
@@ -165,7 +245,11 @@
     "partOfSpeech": "Verb",
     "definition": "To surrender under certain conditions; to give in",
     "sentence": "The suspect finally capitulated to the police after there was no escape.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "After hours of negotiation, the company agreed to capitulate.",
+      "The defending team refused to capitulate despite the large deficit."
+    ]
   },
   {
     "id": "notebook-cavalier",
@@ -173,7 +257,11 @@
     "partOfSpeech": "Adjective",
     "definition": "Casual, carefree, and nonchalant; showing arrogant disregard",
     "sentence": "Colonel Mack was disliked because of his cavalier attitude toward the troops.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "His cavalier attitude toward deadlines frustrated the group.",
+      "She was upset by his cavalier dismissal of her concerns."
+    ]
   },
   {
     "id": "notebook-accrue",
@@ -181,7 +269,11 @@
     "partOfSpeech": "Verb",
     "definition": "To accumulate over time",
     "sentence": "By the time he was 18, he had accrued a knowledge of computers.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "Savings can accrue interest over several years.",
+      "Small mistakes may accrue until they become a serious problem."
+    ]
   },
   {
     "id": "notebook-ambivalence",
@@ -189,7 +281,11 @@
     "partOfSpeech": "Noun",
     "definition": "Indecision; experiencing contradictory feelings",
     "sentence": "Farmer Brown was ambivalent about corn and tomatoes.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "Maya felt ambivalence about leaving her old neighborhood.",
+      "His ambivalence made it difficult to choose between the two options."
+    ]
   },
   {
     "id": "notebook-appease",
@@ -197,7 +293,11 @@
     "partOfSpeech": "Verb",
     "definition": "To soothe; to pacify or relieve by giving in",
     "sentence": "To appease his mother, Zach always walked the dog.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The company offered a refund to appease the unhappy customer.",
+      "She brought an extra snack to appease her hungry brother."
+    ]
   },
   {
     "id": "notebook-asinine",
@@ -205,7 +305,11 @@
     "partOfSpeech": "Adjective",
     "definition": "Silly",
     "sentence": "The children howled with laughter at the asinine joke.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The teacher rejected the asinine suggestion to cancel all homework forever.",
+      "Making an asinine joke during the emergency was inappropriate."
+    ]
   },
   {
     "id": "notebook-baleful",
@@ -213,7 +317,11 @@
     "partOfSpeech": "Adjective",
     "definition": "Threatening; harmful; ominous",
     "sentence": "The sky was baleful, filled with clouds.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The villain cast a baleful glance across the room.",
+      "A baleful warning echoed through the dark hallway."
+    ]
   },
   {
     "id": "notebook-brink",
@@ -221,7 +329,11 @@
     "partOfSpeech": "Noun",
     "definition": "Edge",
     "sentence": "The cat was on the brink of the counter.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The climber paused at the brink of a steep drop.",
+      "The team was on the brink of winning its first championship."
+    ]
   },
   {
     "id": "notebook-abashed",
@@ -229,7 +341,11 @@
     "partOfSpeech": "Adjective",
     "definition": "Ashamed or embarrassed",
     "sentence": "Tony was abashed when he had no cash.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "She felt abashed after confidently giving the wrong answer.",
+      "The boy looked abashed when everyone noticed his mistake."
+    ]
   },
   {
     "id": "notebook-apex",
@@ -237,7 +353,11 @@
     "partOfSpeech": "Noun",
     "definition": "Highest point; peak",
     "sentence": "Christina marked the apex before she finished the graphing problem.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The eagle circled near the apex of the mountain.",
+      "The rocket reached the apex of its flight before descending."
+    ]
   },
   {
     "id": "notebook-abate",
@@ -245,7 +365,11 @@
     "partOfSpeech": "Verb",
     "definition": "To reduce; to become less intense",
     "sentence": "Martha's defeat in the game did not abate her love for tennis.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "The heavy rain began to abate by morning.",
+      "The noise from the crowd did not abate until the show ended."
+    ]
   },
   {
     "id": "notebook-animosity",
@@ -253,6 +377,10 @@
     "partOfSpeech": "Noun",
     "definition": "A feeling of ill will; bitter hostility",
     "sentence": "Displaying animosity for his neighbor, Roger built a fence between their houses.",
-    "deck": "Notebook Sample"
+    "deck": "Notebook Sample",
+    "contextSentences": [
+      "Years of rivalry created animosity between the two teams.",
+      "They resolved their animosity after talking through the misunderstanding."
+    ]
   }
 ]
