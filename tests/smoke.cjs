@@ -21,7 +21,7 @@ for (const file of ['index.html','styles.css','favicon.svg','.github/workflows/d
 }
 
 const withExports = source.replace(/\s*initialize\(\);\s*\}\)\(\);\s*$/,
-  '  return {sanitizeDb,mergeSeedWords,counts,makeQuestion,parseText,startQuiz,answerQuiz,advanceQuiz,startFlash,rateFlash,openWordForm,createDeck,allDecks,matchingSuggestions,renderQuizPage,onSubmit,onInput,updateSuggestions,chooseSuggestion,makeQuestion,getDb:()=>db,getQuiz:()=>quiz,getFlash:()=>flash,setDb:(x)=>{db=x},setSeed:(x)=>{seedWords=x}};\n})();');
+  '  return {sanitizeDb,mergeSeedWords,counts,makeQuestion,parseText,startQuiz,answerQuiz,advanceQuiz,startFlash,rateFlash,openWordForm,createDeck,allDecks,matchingSuggestions,renderQuizPage,onSubmit,onInput,updateSuggestions,chooseSuggestion,setQuiz:(x)=>{quiz=x},getDb:()=>db,getQuiz:()=>quiz,getFlash:()=>flash,setDb:(x)=>{db=x},setSeed:(x)=>{seedWords=x}};\n})();');
 assert.notEqual(withExports, source, 'Could not isolate test functions');
 const elements = {};
 for (const id of ['app','deckFilter','breadcrumb','toast']) {
@@ -93,7 +93,9 @@ for (const q of app.getQuiz().questions) {
   assert.ok(q.clozeText.includes('_______'));
   assert.ok(q.clozeAnswer);
   assert.ok(!q.clozeText.includes(q.clozeAnswer));
-  assert.ok(q.word.contextSentences.some((text)=>text.replace(/\\b\\w+\\b/g,'').length>=0)); // source present
+  const originalSentence=q.clozeText.replace('_______',q.clozeAnswer);
+  assert.ok(q.word.contextSentences.includes(originalSentence), 'The question must use a fresh stored sentence');
+  assert.notEqual(originalSentence,q.word.sentence, 'Avoid memorized notebook sentences');
 }
 app.startQuiz('test','multiple',{autocomplete:false});
 assert.equal(app.getQuiz().autocomplete,false);
@@ -132,6 +134,17 @@ const custom=app.makeQuestion({id:'custom',word:'Ambivalence',definition:'Mixed 
 assert.equal(custom.kind,'sentence');
 assert.equal(custom.clozeAnswer,'Ambivalence');
 assert.ok(custom.clozeText.includes('_______'));
+
+app.setQuiz(null);
+const setupHtml=app.renderQuizPage('test');
+assert.ok(setupHtml.includes('Fill in the blanks only'));
+assert.ok(setupHtml.includes('Multiple choice only'));
+assert.ok(setupHtml.includes('id="testAutocomplete"'));
+let submitted=false;
+app.onSubmit({target:{id:'testSetupForm',elements:{testType:{value:'sentence'},testAutocomplete:{checked:false}}},preventDefault(){submitted=true}});
+assert.equal(submitted,true);
+assert.equal(app.getQuiz().testKind,'sentence');
+assert.equal(app.getQuiz().autocomplete,false);
 
 app.startQuiz('test','multiple',{autocomplete:false});
 assert.ok(app.renderQuizPage('test').includes('CHOOSE THE DEFINITION') || app.renderQuizPage('test').includes('FIND THE WORD'));
