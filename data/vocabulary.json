@@ -1,0 +1,98 @@
+[
+  {
+    "id": "notebook-dour",
+    "word": "Dour",
+    "partOfSpeech": "Adjective",
+    "definition": "Severe; gloomy",
+    "sentence": "The garbage collector was a dour man.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-dishevel",
+    "word": "Dishevel",
+    "partOfSpeech": "Verb",
+    "definition": "To make untidy; to disarrange",
+    "sentence": "Andrea's hair became disheveled by the strong breeze.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-eloquent",
+    "word": "Eloquent",
+    "partOfSpeech": "Adjective",
+    "definition": "Extremely expressive in speech, writing, or movement",
+    "sentence": "Stan gave a moving, eloquent speech.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-emphatic",
+    "word": "Emphatic",
+    "partOfSpeech": "Adjective",
+    "definition": "Forcible; expressive",
+    "sentence": "My mom emphatically told me to be home by midnight.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-eschew",
+    "word": "Eschew",
+    "partOfSpeech": "Verb",
+    "definition": "To avoid or to shun",
+    "sentence": "Bob was told to eschew going outside during the storm.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-chastise",
+    "word": "Chastise",
+    "partOfSpeech": "Verb",
+    "definition": "To discipline; to criticize severely",
+    "sentence": "My mother chastised us for playing ball in the house.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-copious",
+    "word": "Copious",
+    "partOfSpeech": "Adjective",
+    "definition": "Abundant; plentiful (a lot)",
+    "sentence": "Lizzie gave copious reasons why she should stay at home.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-cascade",
+    "word": "Cascade",
+    "partOfSpeech": "Noun/Verb",
+    "definition": "A waterfall; to fall, pour, or rush like a waterfall",
+    "sentence": "A cascade of confetti rained down upon celebrating the new year.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-conundrum",
+    "word": "Conundrum",
+    "partOfSpeech": "Noun",
+    "definition": "A dilemma; a difficult problem or puzzle",
+    "sentence": "In most mystery novels, the conundrum is solved by the end.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-crux",
+    "word": "Crux",
+    "partOfSpeech": "Noun",
+    "definition": "The main point; the heart of the matter",
+    "sentence": "After Harry rambled on for hours, it was difficult to understand the crux of his speech.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-defunct",
+    "word": "Defunct",
+    "partOfSpeech": "Adjective",
+    "definition": "Dead or inactive; having ceased to exist",
+    "sentence": "The jolly man tried to use a coupon at the defunct store.",
+    "deck": "Notebook Sample"
+  },
+  {
+    "id": "notebook-deter",
+    "word": "Deter",
+    "partOfSpeech": "Verb",
+    "definition": "To discourage or keep someone from doing something",
+    "sentence": "Most homes have security cameras to deter thieves.",
+    "deck": "Notebook Sample"
+  }
+]
