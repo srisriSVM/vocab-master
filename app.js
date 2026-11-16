@@ -301,13 +301,18 @@
     const pool = scopedWords();
     if (!pool.length) {navigate('words');return;}
     const testKind = mode==='test' && ['mixed','sentence','multiple'].includes(kind) ? kind : 'mixed';
+    if (mode==='test' && testKind==='multiple' && db.words.length<2) {
+      toast('Add at least two words to use multiple-choice tests.');
+      return;
+    }
     const cards = shuffle(pool).slice(0,Math.min(10,pool.length));
+    const choicePool = mode==='test' && testKind==='multiple' && pool.length<4 ? db.words : pool;
     const questionKind=(index) => mode!=='test' ? kind :
       testKind==='sentence' ? 'sentence' :
       testKind==='multiple' ? ['meaning','word'][index%2] :
       ['meaning','word','spelling','sentence'][index%4];
     quiz = {mode,deck:selectedDeck,testKind,practiceKind:kind,autocomplete:options.autocomplete ?? mode==='practice',
-      questions:cards.map((w,i)=>makeQuestion(w,questionKind(i),pool)),
+      questions:cards.map((w,i)=>makeQuestion(w,questionKind(i),choicePool)),
       index:0,score:0,answered:false,picked:null,wasCorrect:false,guess:'',answers:[],finished:false};
     suggestionIndex=-1;
     render();
@@ -367,7 +372,7 @@
           '<label class="test-choice"><input type="radio" name="testType" value="mixed" checked><span><strong>Mixed test</strong><small>Definitions, word choices, spelling, and sentences</small></span></label>'+
           '<label class="test-choice"><input type="radio" name="testType" value="sentence"><span><strong>Fill in the blanks only</strong><small>Complete sentences with the missing vocabulary word</small></span></label>'+
           '<label class="test-choice"><input type="radio" name="testType" value="multiple"><span><strong>Multiple choice only</strong><small>No typing required</small></span></label></fieldset>'+
-          '<label class="test-autocomplete"><input type="checkbox" id="testAutocomplete" checked><span><strong>Show word suggestions while typing</strong><small>After 2 letters, show up to 5 matches from this list. Turn off for a harder test.</small></span></label>'+
+          '<label class="test-autocomplete"><input type="checkbox" id="testAutocomplete" name="testAutocomplete" checked><span><strong>Show word suggestions while typing</strong><small>After 2 letters, show up to 5 matches from this list. Turn off for a harder test.</small></span></label>'+
           '<div class="session-actions"><button type="submit" class="button primary">Start my test →</button></div></form>' :
         '<div class="session-actions"><button class="button primary" data-action="start-quiz" data-mode="practice" data-kind="meaning">Word → Meaning</button>'+
         '<button class="button soft" data-action="start-quiz" data-mode="practice" data-kind="word">Meaning → Word</button>'+
