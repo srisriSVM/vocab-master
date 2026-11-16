@@ -5,7 +5,7 @@ A free, private, Quizlet-style vocabulary study app for school words. Hosted as 
 ## Features
 
 - Word lists organized by unit/week, with **word**, **part of speech**, **definition**, and **example sentence**
-- Edit, delete, and manually add words
+- Create empty word lists (Unit 2, Level 3, etc.); edit, delete, and manually add words
 - Bulk paste or import **.txt / .csv** vocabulary files, with preview and duplicate detection
 - Flashcards with **I remembered / Still learning** progress tracking
 - Multiple-choice practice (word → definition and definition → word)
@@ -33,7 +33,7 @@ To add a new photographed list later, send the photo to ChatGPT and request an *
 
 ### Text import
 
-Choose **My word lists → Import words**, then paste or upload a file with one entry per line. Supported formats:
+Choose **My word lists → Create word list** to make an empty unit first, or choose **Import words** to add vocabulary in bulk. Then then paste or upload a file with one entry per line. Supported formats:
 
 ```text
 Dour | Adjective | Severe; gloomy | The garbage collector was dour.
